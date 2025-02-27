@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Memo;
 
 class MemoController extends Controller
 {
@@ -11,7 +12,7 @@ class MemoController extends Controller
      */
     public function index()
     {
-        //
+        return Memo::all();
     }
 
     /**
@@ -19,7 +20,10 @@ class MemoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $memo = new Memo();
+        $memo->fill($request->all())->save();
+        // Laravelでは、Eloquentモデルを直接返すと、自動的にJSON形式に変換される
+        return $memo;
     }
 
     /**
@@ -27,7 +31,7 @@ class MemoController extends Controller
      */
     public function show(string $id)
     {
-        //
+        return Memo::findOrFail($id);
     }
 
     /**
@@ -35,7 +39,9 @@ class MemoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $memo = Memo::findOrFail($id);
+        $memo->fill($request->all())->save();
+        return $memo;
     }
 
     /**
@@ -43,6 +49,8 @@ class MemoController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $memo = Memo::findOrFail($id);
+        $memo->delete();
+        return $memo;
     }
 }
