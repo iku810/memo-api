@@ -1,0 +1,162 @@
+openapi: 3.0.3
+info:
+  title: メモ API
+  version: 1.0.0
+servers:
+  - url: http://127.0.0.1:8000/api
+    description: Local development server
+tags:
+  - name: memos
+    description: メモを操作する
+paths:
+  /memos:
+    get:
+      tags:
+        - memos
+      summary: 全てのメモを取得する
+      operationId: getMemos
+      responses:
+        "200":
+          description: メモの一覧
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Memo"
+    post:
+      tags:
+        - memos
+      summary: 新しいメモを作成する
+      operationId: createMemo
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MemoInput"
+      responses:
+        "201":
+          description: Memo created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Memo"
+  /memos/{memoId}:
+    get:
+      tags:
+        - memos
+      summary: IDを指定してメモを取得する
+      operationId: getMemoById
+      parameters:
+        - name: memoId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Memo details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Memo"
+        "404":
+          description: Memo not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    put:
+      tags:
+        - memos
+      summary: IDを指定してメモを更新する
+      operationId: updateMemo
+      parameters:
+        - name: memoId
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MemoInput"
+      responses:
+        "200":
+          description: Memo updated
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Memo"
+        "404":
+          description: Memo not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+    delete:
+      tags:
+        - memos
+      summary: IDを指定してメモを削除する
+      operationId: deleteMemo
+      parameters:
+        - name: memoId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "204":
+          description: Memo deleted
+        "404":
+          description: Memo not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+components:
+  schemas:
+    Memo:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        title:
+          type: string
+          example: "買い物"
+        content:
+          type: string
+          example: "牛乳"
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-03-02T12:01:58.000000Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2025-03-02T12:01:58.000000Z"
+    MemoInput:
+      type: object
+      required:
+        - title
+        - content
+      properties:
+        title:
+          type: string
+          example: "買い物"
+        content:
+          type: string
+          example: "卵"
+    ErrorResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          example: "Not Found"
+        detail:
+          type: string
+          example: "指定されたIDのメモが見つかりませんでした"
