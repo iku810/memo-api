@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\Memo;
 
 class MemoController extends Controller
@@ -31,7 +32,12 @@ class MemoController extends Controller
      */
     public function show(string $id)
     {
-        return Memo::findOrFail($id);
+        try {
+            return Memo::findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            // 例外処理を行うことで、指定したIDのメモが存在しない場合に404エラーを返す
+            abort(404);
+        }
     }
 
     /**
@@ -39,7 +45,12 @@ class MemoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        $memo = Memo::findOrFail($id);
+        try {
+            $memo = Memo::findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            // 例外処理を行うことで、指定したIDのメモが存在しない場合に404エラーを返す
+            abort(404);
+        }
         $memo->fill($request->all())->save();
         return $memo;
     }
@@ -49,7 +60,12 @@ class MemoController extends Controller
      */
     public function destroy(string $id)
     {
-        $memo = Memo::findOrFail($id);
+        try {
+            $memo = Memo::findOrFail($id);
+        } catch (ModelNotFoundException $e) {
+            // 例外処理を行うことで、指定したIDのメモが存在しない場合に404エラーを返す
+            abort(404);
+        }
         $memo->delete();
         return $memo;
     }
