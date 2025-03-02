@@ -9,5 +9,6 @@ class Memo extends Model
 {
     use HasFactory;
 
+    // マスアサインメントを許可するカラム
     protected $fillable = ['title', 'content'];
 }

@@ -11,6 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
+        // Create memos table
         Schema::create('memos', function (Blueprint $table) {
             $table->id();
             $table->string('title');
